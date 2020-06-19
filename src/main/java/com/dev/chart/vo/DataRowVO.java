@@ -7,12 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DataRowVO {
 	
+
+	 @JsonProperty("CountryCode")
+	private String countryCode;
 	 @JsonProperty("Country")
 	private String country;
 	 @JsonProperty("TotalConfirmed")
 	private String totalConfirmed;
 	 @JsonProperty("TotalDeaths")
-	private String totalDeaths;
+	private Long totalDeaths;
 	 @JsonProperty("TotalRecovered")
 	private String totalRecovered;
 	 @JsonProperty("Date")
@@ -22,13 +25,15 @@ public class DataRowVO {
 		
 	}
 
-	public DataRowVO(String country, String totalConfirmed, String totalDeaths, String totalRecovered, String date) {
+	public DataRowVO(String country, String totalConfirmed, Long totalDeaths, String totalRecovered, String date,
+			String countryCode) {
 		super();
 		this.country = country;
 		this.totalConfirmed = totalConfirmed;
 		this.totalDeaths = totalDeaths;
 		this.totalRecovered = totalRecovered;
 		this.date = date;
+		this.countryCode = countryCode;
 	}
 
 	public String getCountry() {
@@ -47,11 +52,11 @@ public class DataRowVO {
 		this.totalConfirmed = totalConfirmed;
 	}
 
-	public String getTotalDeaths() {
+	public Long getTotalDeaths() {
 		return totalDeaths;
 	}
 
-	public void setTotalDeaths(String totalDeaths) {
+	public void setTotalDeaths(Long totalDeaths) {
 		this.totalDeaths = totalDeaths;
 	}
 
@@ -69,6 +74,14 @@ public class DataRowVO {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
 	}
 	
 }

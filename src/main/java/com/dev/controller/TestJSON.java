@@ -3,8 +3,11 @@ package com.dev.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 
 import com.dev.chart.vo.GlobalData;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,52 +17,31 @@ public class TestJSON {
 	
 	 public static void main(String[] args) {
 		 ObjectMapper map = new ObjectMapper();
-	     String jStr = "{\r\n" + 
-	     		"  \"Global\": {\r\n" + 
-	     		"    \"NewConfirmed\": 139803,\r\n" + 
-	     		"    \"TotalConfirmed\": 8274306,\r\n" + 
-	     		"    \"NewDeaths\": 6829,\r\n" + 
-	     		"    \"TotalDeaths\": 451939,\r\n" + 
-	     		"    \"NewRecovered\": 97831,\r\n" + 
-	     		"    \"TotalRecovered\": 3954518\r\n" + 
-	     		"  },\r\n" + 
-	     		"  \"Countries\": [\r\n" + 
-	     		"    {\r\n" + 
-	     		"      \"Country\": \"Afghanistan\",\r\n" + 
-	     		"      \"CountryCode\": \"AF\",\r\n" + 
-	     		"      \"Slug\": \"afghanistan\",\r\n" + 
-	     		"      \"NewConfirmed\": 783,\r\n" + 
-	     		"      \"TotalConfirmed\": 26310,\r\n" + 
-	     		"      \"NewDeaths\": 13,\r\n" + 
-	     		"      \"TotalDeaths\": 491,\r\n" + 
-	     		"      \"NewRecovered\": 344,\r\n" + 
-	     		"      \"TotalRecovered\": 5508,\r\n" + 
-	     		"      \"Date\": \"2020-06-17T15:49:01Z\"\r\n" + 
-	     		"    },\r\n" + 
-	     		"    {\r\n" + 
-	     		"      \"Country\": \"Albania\",\r\n" + 
-	     		"      \"CountryCode\": \"AL\",\r\n" + 
-	     		"      \"Slug\": \"albania\",\r\n" + 
-	     		"      \"NewConfirmed\": 82,\r\n" + 
-	     		"      \"TotalConfirmed\": 1672,\r\n" + 
-	     		"      \"NewDeaths\": 1,\r\n" + 
-	     		"      \"TotalDeaths\": 37,\r\n" + 
-	     		"      \"NewRecovered\": 9,\r\n" + 
-	     		"      \"TotalRecovered\": 1064,\r\n" + 
-	     		"      \"Date\": \"2020-06-17T15:49:01Z\"\r\n" + 
-	     		"    }\r\n" + 
-	     		"  ],\r\n" + 
-	     		"  \"Date\": \"2020-06-17T15:49:01Z\"\r\n" + 
-	     		"}";
-	    		JSONObject obj = new JSONObject(jStr);
-	    		GlobalData data = null;
-	    		try {
-					 data = map.readValue(obj.get("Global").toString(), GlobalData.class);
-				} catch (JsonProcessingException | JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-	    		System.out.println(data);
+			String jsonStr = null;
+			RestTemplate restTemplate = new RestTemplate();
+			try {
+				jsonStr = restTemplate.getForObject("http://corona.lmao.ninja/v2/continents?yesterday=true&sort", String.class);
+				//return convertToJsonString(jsonStr);
+				//return convertToJsonUsingGson(jsonStr);
+			} catch (RestClientException ex) {
+				//logger.error("Error while fetching data for top 10 countries " + ex.getMessage());
+			}
+			
+	    		//JSONObject obj = new JSONObject(jsonStr);
+	    		JSONArray jArr = new JSONArray(jsonStr);
+	    		for(int i=0; i<jArr.length(); i++) {
+	    			System.out.println("Continent -> " + ((JSONObject)jArr.get(i)).getString("continent"));
+	    			
+	    		}
+	    		
+//	    		GlobalData data = null;
+//	    		try {
+//					 data = map.readValue(obj.get("Global").toString(), GlobalData.class);
+//				} catch (JsonProcessingException | JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//	    		System.out.println(data);
 
 	   }
 

@@ -1,5 +1,8 @@
 package com.dev.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.transaction.SystemException;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.dev.entity.User;
 import com.dev.repository.RolesRepository;
 import com.dev.repository.UserRepository;
+import com.dev.chart.vo.CountryDeaths;
+import com.dev.chart.vo.DataRowVO;
 import com.dev.constants.AppConstants;
 import com.dev.entity.Roles;
 
@@ -54,5 +59,26 @@ public class DashboardServiceImpl implements DashboardService {
 
 	public boolean checkUserByEmail(String emailId) {
 		return userRepository.findByEmail(emailId)!= null;
+	}
+	
+	public CountryDeaths filterList(List<DataRowVO> list) {
+		List<DataRowVO> filteredList = new ArrayList<DataRowVO>();
+		
+		CountryDeaths obj = new CountryDeaths();
+		
+		HashSet<String> countryList = new HashSet<String>();
+		HashSet<Long> noOfDeaths = new HashSet<Long>();
+		
+		list.forEach(item->{
+			if(Arrays.stream(AppConstants.countryArr).anyMatch(item.getCountryCode()::equals)) {
+				countryList.add(item.getCountry());
+				noOfDeaths.add(item.getTotalDeaths());
+			}
+		});
+		
+		obj.setCountryList(countryList);
+		obj.setNoOfDeaths(noOfDeaths);
+
+		return obj;
 	}
 }

@@ -1,9 +1,12 @@
 package com.dev.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.chart.vo.ConfirmedCases;
 import com.dev.chart.vo.CountryData;
+import com.dev.chart.vo.CountryDeaths;
 import com.dev.chart.vo.DataRowVO;
 import com.dev.chart.vo.GlobalData;
 import com.dev.config.model.UserPrincipal;
@@ -23,6 +27,7 @@ import com.dev.config.response.ApiResponse;
 import com.dev.constants.AppConstants;
 import com.dev.invoke.external.InvokeExternalService;
 import com.dev.security.config.CurrentUser;
+import com.dev.service.DashboardService;
 
 @RestController
 @RequestMapping("/dashboard")
@@ -33,6 +38,9 @@ public class DashboardController {
 
 	@Autowired
 	private InvokeExternalService invokeExternalService;
+	
+	@Autowired
+	private DashboardService dashboardService;
 	
 	@GetMapping("/getTopCountriesData")
 	public List getTopCountries(@CurrentUser UserPrincipal userPrincipal){
@@ -88,5 +96,22 @@ public class DashboardController {
 	public GlobalData getGlobalData() {
 		return invokeExternalService.getGlobalData();
 	}
+	
+	@GetMapping("/getCountryDeaths")
+	public CountryDeaths getCountryDeaths(@CurrentUser UserPrincipal userPrincipal){
+		ApiResponse apiResponse = null;
+		Map<String,Object> finalMap=null;
+		
+		List<DataRowVO> list = invokeExternalService.getTopCountriesData();
+		
+		if(list != null && !list.isEmpty()) {
+			
+			return dashboardService.filterList(list);
+		} else {
+			apiResponse = new ApiResponse(true, 1000L, "Data fetched Successfully", finalMap);
+		}
+		return null;
+	}
+	
 	
 }

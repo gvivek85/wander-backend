@@ -55,7 +55,6 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		try {
 			jsonStr = restTemplate.getForObject(countryDataUrl, String.class);
 			return convertToJsonString(jsonStr);
-			//return convertToJsonUsingGson(jsonStr);
 		} catch (RestClientException ex) {
 			logger.error("Error while fetching data for top 10 countries " + ex.getMessage());
 		}
