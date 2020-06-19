@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.dev.chart.vo.GlobalData;
+import com.dev.chart.vo.GlobalDataVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

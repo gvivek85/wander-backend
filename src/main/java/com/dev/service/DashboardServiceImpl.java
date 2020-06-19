@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import com.dev.entity.User;
 import com.dev.repository.RolesRepository;
 import com.dev.repository.UserRepository;
-import com.dev.chart.vo.CountryDeaths;
+import com.dev.chart.vo.CountryDeathsVO;
 import com.dev.chart.vo.DataRowVO;
 import com.dev.constants.AppConstants;
 import com.dev.entity.Roles;
@@ -61,10 +61,10 @@ public class DashboardServiceImpl implements DashboardService {
 		return userRepository.findByEmail(emailId)!= null;
 	}
 	
-	public CountryDeaths filterList(List<DataRowVO> list) {
+	public CountryDeathsVO filterList(List<DataRowVO> list) {
 		List<DataRowVO> filteredList = new ArrayList<DataRowVO>();
 		
-		CountryDeaths obj = new CountryDeaths();
+		CountryDeathsVO obj = new CountryDeathsVO();
 		
 		HashSet<String> countryList = new HashSet<String>();
 		HashSet<Long> noOfDeaths = new HashSet<Long>();

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,29 +13,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.config.model.UserPrincipal;
+import com.dev.entity.User;
 import com.dev.security.config.CurrentUser;
-import com.dev.value.object.UserVO;
+import com.dev.service.UserService;
+import com.dev.value.object.UserSummary;
 
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/user")
 @CrossOrigin
 public class UserController {
 	
 	private Logger logger = LoggerFactory.getLogger(UserController.class);
 	
+	@Autowired
+	private UserService userService;
+	
 	@GetMapping("/userDetails")
-	public UserVO getUserDetails(@CurrentUser UserPrincipal userPrincipal) {
-		UserVO userVO = new UserVO(userPrincipal.getId(), userPrincipal.getName(),
+	public UserSummary getUserDetails(@CurrentUser UserPrincipal userPrincipal) {
+		UserSummary userSummary = new UserSummary(userPrincipal.getId(), userPrincipal.getName(),
 					userPrincipal.getUsername(), (List<GrantedAuthority>) userPrincipal.getAuthorities());
 				
 		logger.info("Returning the logged in user details to the UI");
-		return userVO;
+		return userSummary;
 	}
 	
-	@GetMapping("/userInfo")
-	public UserVO getUserDetails() {
-		UserVO userVO = new UserVO(1L, "Vivek", "vivek85", null);
-		logger.info("Returning the logged in user details to the UI");
-		return userVO;
+	@GetMapping("/getUserList")
+	public List<User> getUsers(@CurrentUser UserPrincipal userPrincipal) {
+		//if(null != userPrincipal) {
+			List<User> userList = userService.getUserList();
+			if(null != userList) {
+				logger.info("No of Users " + userList.size());
+				return userList;
+			} else {
+				logger.info("No users available in the System");
+			}
+//		} else { 
+//			logger.info("Invalid User request");
+//		}
+		return null;
 	}
 }

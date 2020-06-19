@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev.chart.vo.ConfirmedCases;
-import com.dev.chart.vo.CountryData;
-import com.dev.chart.vo.CountryDeaths;
+import com.dev.chart.vo.ConfirmedCasesVO;
+import com.dev.chart.vo.CountryDataVO;
+import com.dev.chart.vo.CountryDeathsVO;
 import com.dev.chart.vo.DataRowVO;
-import com.dev.chart.vo.GlobalData;
+import com.dev.chart.vo.GlobalDataVO;
 import com.dev.config.model.UserPrincipal;
 import com.dev.config.response.ApiResponse;
 import com.dev.constants.AppConstants;
@@ -60,12 +60,12 @@ public class DashboardController {
 	}
 	
 	@GetMapping("/getCountrySpecificData/{country}")
-	public List<CountryData> getCountrySpecificData(@CurrentUser UserPrincipal userPrincipal,
+	public List<CountryDataVO> getCountrySpecificData(@CurrentUser UserPrincipal userPrincipal,
 			@PathVariable String country){
 		ApiResponse apiResponse = null;
 		Map<String,Object> finalMap=null;
 		
-		List<CountryData> list = invokeExternalService.getCountrySpecificData(country);
+		List<CountryDataVO> list = invokeExternalService.getCountrySpecificData(country);
 		
 		if(list != null) {
 			finalMap = new HashMap<String, Object>();
@@ -79,11 +79,11 @@ public class DashboardController {
 	}
 	
 	@GetMapping("/getSummary")
-	public List<ConfirmedCases> getSummary(@CurrentUser UserPrincipal userPrincipal){
+	public List<ConfirmedCasesVO> getSummary(@CurrentUser UserPrincipal userPrincipal){
 		ApiResponse apiResponse = null;
 		Map<String,Object> finalMap=null;
 		
-		List<ConfirmedCases> list = invokeExternalService.getSummary();
+		List<ConfirmedCasesVO> list = invokeExternalService.getSummary();
 		
 		if(list == null || list.isEmpty()) {
 			logger.error("No Data found for Country Summary");
@@ -93,12 +93,12 @@ public class DashboardController {
 	}
 	
 	@GetMapping("/getGlobalData")
-	public GlobalData getGlobalData() {
+	public GlobalDataVO getGlobalData() {
 		return invokeExternalService.getGlobalData();
 	}
 	
 	@GetMapping("/getCountryDeaths")
-	public CountryDeaths getCountryDeaths(@CurrentUser UserPrincipal userPrincipal){
+	public CountryDeathsVO getCountryDeaths(@CurrentUser UserPrincipal userPrincipal){
 		ApiResponse apiResponse = null;
 		Map<String,Object> finalMap=null;
 		

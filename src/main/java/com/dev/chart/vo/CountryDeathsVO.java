@@ -3,17 +3,17 @@ package com.dev.chart.vo;
 import java.util.HashSet;
 import java.util.List;
 
-public class CountryDeaths {
+public class CountryDeathsVO {
 	
 	private HashSet<String> countryList;
 	
 	private HashSet<Long> noOfDeaths;
 	
-	public CountryDeaths() {
+	public CountryDeathsVO() {
 		
 	}
 
-	public CountryDeaths(HashSet<String> countryList, HashSet<Long> noOfDeaths) {
+	public CountryDeathsVO(HashSet<String> countryList, HashSet<Long> noOfDeaths) {
 		super();
 		this.countryList = countryList;
 		this.noOfDeaths = noOfDeaths;

@@ -4,17 +4,17 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ConfirmedCases {
+public class ConfirmedCasesVO {
 	@JsonProperty
 	private String name;
 	
 	@JsonProperty
 	private List<Long> data;
 	
-	public ConfirmedCases() {
+	public ConfirmedCasesVO() {
 		
 	}
-	public ConfirmedCases(String name, List<Long> data) {
+	public ConfirmedCasesVO(String name, List<Long> data) {
 		super();
 		this.name = name;
 		this.data = data;

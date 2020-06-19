@@ -1,68 +1,55 @@
 package com.dev.value.object;
 
-import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.security.core.GrantedAuthority;
-
-
 public class UserVO {
-
-	private Long userId;
+	
 	private String username;
-	private String name;
 
-	private List<GrantedAuthority> authorities;
+	private String email;
+
+	private String firstName;
+
+	private String lastName;
 	
-	
-	public UserVO(Long userId, String username, String name, List<GrantedAuthority> authorities) {
-		super();
-		this.userId = userId;
-		this.username = username;
-		this.name = name;
-		this.authorities = authorities;
-	}
-
-
-	public Long getUserId() {
-		return userId;
-	}
-
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
+	private String roleName;
 
 	public String getUsername() {
 		return username;
 	}
 
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
-
-	public String getName() {
-		return name;
+	public String getEmail() {
+		return email;
 	}
 
-
-	public void setName(String name) {
-		this.name = name;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-
-	public List<GrantedAuthority> getAuthorities() {
-		return authorities;
+	public String getFirstName() {
+		return firstName;
 	}
 
-
-	public void setAuthorities(List<GrantedAuthority> authorities) {
-		this.authorities = authorities;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+	
 }

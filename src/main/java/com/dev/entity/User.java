@@ -19,6 +19,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "USERS", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"username"}),
@@ -180,15 +182,6 @@ public class User {
 		this.expiredDate = expiredDate;
 	}
 
-	public void setExpiryDate(int days){
-		Calendar now = Calendar.getInstance();
-		now.add(Calendar.DATE, days);
-		this.expiredDate = now.getTime().toInstant();
-	}
-
-	public boolean isExpired() {
-		return new Date().after(Date.from(this.expiredDate));
-	}
 
 	public Long getId() {
 		return id;

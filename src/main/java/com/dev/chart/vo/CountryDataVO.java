@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CountryData {
+public class CountryDataVO {
 
 	@JsonProperty("Country")
 	private String country;
@@ -24,11 +24,11 @@ public class CountryData {
 	@JsonProperty("Deaths")
 	private Long deaths; 
 	
-	public CountryData() {
+	public CountryDataVO() {
 		
 	}
 
-	public CountryData(String country, Long confirmed, Date date, String countryCode, Long deaths) {
+	public CountryDataVO(String country, Long confirmed, Date date, String countryCode, Long deaths) {
 		super();
 		this.country = country;
 		this.confirmed = confirmed;

@@ -18,10 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.dev.chart.vo.ConfirmedCases;
-import com.dev.chart.vo.CountryData;
+import com.dev.chart.vo.ConfirmedCasesVO;
+import com.dev.chart.vo.CountryDataVO;
 import com.dev.chart.vo.DataRowVO;
-import com.dev.chart.vo.GlobalData;
+import com.dev.chart.vo.GlobalDataVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
@@ -81,11 +81,11 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 	}
 
 	@Override
-	public List<CountryData> getCountrySpecificData(String country) {
+	public List<CountryDataVO> getCountrySpecificData(String country) {
 		Object obj = null;
 		String jsonStr = null;
-		CountryData cData = null;
-		List<CountryData> cDataList = new ArrayList<CountryData>();
+		CountryDataVO cData = null;
+		List<CountryDataVO> cDataList = new ArrayList<CountryDataVO>();
 		
 		try {
 			jsonStr =  restTemplate.getForObject(countrySpecificUrl+country, String.class);
@@ -93,7 +93,7 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 			ObjectMapper map = new ObjectMapper();
 			JSONArray array = new JSONArray(jsonStr);
 			for(int i = 0 ; i < array.length() ; i++){
-				cData = map.readValue(array.getJSONObject(i).toString(), CountryData.class);
+				cData = map.readValue(array.getJSONObject(i).toString(), CountryDataVO.class);
 				cDataList.add(cData);
 			}
 			Collections.sort(cDataList, Collections.reverseOrder((c1,c2)-> {
@@ -107,12 +107,12 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		return null;
 	}
 
-	private List<CountryData> countryData(List<CountryData> cDataList){
-		List<CountryData> confirmedList = new ArrayList<CountryData>();
-		CountryData data1 = null;
+	private List<CountryDataVO> countryData(List<CountryDataVO> cDataList){
+		List<CountryDataVO> confirmedList = new ArrayList<CountryDataVO>();
+		CountryDataVO data1 = null;
 		if(cDataList != null && !cDataList.isEmpty()) {
 			for(int i=0;i<7;i++) {
-				data1 = new CountryData();
+				data1 = new CountryDataVO();
 				data1.setCountry(cDataList.get(i).getCountry());
 				data1.setDate(cDataList.get(i).getDate());
 				data1.setConfirmed(cDataList.get(i).getConfirmed()/10000);
@@ -126,13 +126,13 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		return confirmedList;
 	}
 	
-	public List<ConfirmedCases> getSummary() {
-		List<ConfirmedCases> casesList = new ArrayList<ConfirmedCases>();
+	public List<ConfirmedCasesVO> getSummary() {
+		List<ConfirmedCasesVO> casesList = new ArrayList<ConfirmedCasesVO>();
 		
-		List<CountryData> indiaList = getCountrySpecificData("India");
-		List<CountryData> usList = getCountrySpecificData("united-states");
-		List<CountryData> brList = getCountrySpecificData("Brazil");
-		List<CountryData> rusList = getCountrySpecificData("Russia");
+		List<CountryDataVO> indiaList = getCountrySpecificData("India");
+		List<CountryDataVO> usList = getCountrySpecificData("united-states");
+		List<CountryDataVO> brList = getCountrySpecificData("Brazil");
+		List<CountryDataVO> rusList = getCountrySpecificData("Russia");
 		
 		if(indiaList != null && !indiaList.isEmpty()) {
 			casesList.add(filterCountryList("India", indiaList));
@@ -149,8 +149,8 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		return casesList;
 	}
 	
-	private ConfirmedCases filterCountryList(String countryName, List<CountryData> countryList) {
-		ConfirmedCases obj = new ConfirmedCases();
+	private ConfirmedCasesVO filterCountryList(String countryName, List<CountryDataVO> countryList) {
+		ConfirmedCasesVO obj = new ConfirmedCasesVO();
 		List<Long> confirmedCasesList = new ArrayList<Long>();
 		obj.setName(countryName);
 		//obj.setData(countryList);
@@ -162,7 +162,7 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		return obj;
 	}
 	
-	public GlobalData getGlobalData() {
+	public GlobalDataVO getGlobalData() {
 		String jsonStr = null;
 		try {
 			jsonStr = restTemplate.getForObject(countryDataUrl, String.class);
@@ -175,12 +175,12 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		return null;
 	}
 	
-	private GlobalData fetchGlobalData(String str) {
-		GlobalData gData = null;
+	private GlobalDataVO fetchGlobalData(String str) {
+		GlobalDataVO gData = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			JSONObject json = new JSONObject(str);
-			gData = mapper.readValue(json.get("Global").toString(), GlobalData.class);
+			gData = mapper.readValue(json.get("Global").toString(), GlobalDataVO.class);
 			
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block

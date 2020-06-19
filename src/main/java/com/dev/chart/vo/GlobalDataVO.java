@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GlobalData {
+public class GlobalDataVO {
 
 	@JsonProperty("TotalConfirmed")
 	private Long totalConfirmed;
@@ -15,10 +15,10 @@ public class GlobalData {
 	@JsonProperty("TotalRecovered")
 	private String totalRecovered;
 	
-	public GlobalData() {
+	public GlobalDataVO() {
 		
 	}
-	public GlobalData(Long totalConfirmed, Long totalDeaths, String totalRecovered) {
+	public GlobalDataVO(Long totalConfirmed, Long totalDeaths, String totalRecovered) {
 		super();
 		this.totalConfirmed = totalConfirmed;
 		this.totalDeaths = totalDeaths;
