@@ -21,6 +21,10 @@ import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Users Entity class used to hold the details for User
+ * @author Vivek Gupta
+ */
 @Entity
 @Table(name = "USERS", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"username"}),
@@ -67,33 +71,56 @@ public class User {
 	public User() {
 
 	}
-
+	
+	/**
+	 * @param username
+	 * @param email
+	 * @param password
+	 */
 	public User(String username, String email, String password) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
 	}
-
+	
+	/**
+	 * @return
+	 */
 	public String getUsername() {
 		return username;
 	}
-
+	
+	/**
+	 * @param username
+	 */
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
+	
+	/**
+	 * @return
+	 */
 	public String getEmail() {
 		return email;
 	}
-
+	
+	/**
+	 * @param email
+	 */
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
+	/**
+	 * @return
+	 */
 	public String getPassword() {
 		return password;
 	}
-
+	
+	/**
+	 * @param password
+	 */
 	public void setPassword(String password) {
 		this.password = password;
 	}
@@ -182,11 +209,16 @@ public class User {
 		this.expiredDate = expiredDate;
 	}
 
-
+	/**
+	 * @return
+	 */
 	public Long getId() {
 		return id;
 	}
-
+	
+	/**
+	 * @param id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}

@@ -22,6 +22,11 @@ import com.dev.chart.vo.DataRowVO;
 import com.dev.constants.AppConstants;
 import com.dev.entity.Roles;
 
+/**
+ * Dashboard Service Class
+ * @author Vivek Gupta
+ *
+ */
 @Service
 public class DashboardServiceImpl implements DashboardService {
 	
@@ -52,22 +57,28 @@ public class DashboardServiceImpl implements DashboardService {
 				logger.error("No roles found in the database ");
 			}
 		} catch (Exception ex) {
-			
+			logger.error("Error while saving user in the database " + ex.getMessage());
 		}
 		return isSuccess;
 	}
 
+	/**
+	 * Method to check if user with the emailId exists or not.
+	 */
 	public boolean checkUserByEmail(String emailId) {
 		return userRepository.findByEmail(emailId)!= null;
 	}
 	
+	/**
+	 * Method to Filter the DataRowVO list to find out the Total No of Deaths in a country
+	 */
 	public CountryDeathsVO filterList(List<DataRowVO> list) {
 		List<DataRowVO> filteredList = new ArrayList<DataRowVO>();
 		
 		CountryDeathsVO obj = new CountryDeathsVO();
 		
-		HashSet<String> countryList = new HashSet<String>();
-		HashSet<Long> noOfDeaths = new HashSet<Long>();
+		List<String> countryList = new ArrayList<String>();
+		List<Long> noOfDeaths = new ArrayList<Long>();
 		
 		list.forEach(item->{
 			if(Arrays.stream(AppConstants.countryArr).anyMatch(item.getCountryCode()::equals)) {

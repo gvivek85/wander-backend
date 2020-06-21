@@ -17,6 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.dev.config.service.CustomerUserDetailsService;
 
+/**
+ * Security Config  
+ * @author Vivek Gupta
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(
@@ -53,13 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable()
-		// dont authenticate this particular request
-		.authorizeRequests().antMatchers("/auth/**","/user/**","/dashboard/**").permitAll().
-		// all other requests need to be authenticated
+		httpSecurity.cors().and().csrf().disable()
+		.authorizeRequests().antMatchers("/auth/**").permitAll().
 		anyRequest().authenticated().and().
-		// make sure we use stateless session; session won't be used to
-		// store user's state.
 		exceptionHandling().authenticationEntryPoint(jwtAuthEntryPoint).and().sessionManagement()
 		.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

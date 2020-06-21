@@ -15,7 +15,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.NaturalId;
 
-
+/**
+ * Roles Entity class used to hold the Role Name for User
+ * @author Vivek Gupta
+ */
 @Entity
 @Table(name = "ROLES")
 public class Roles {
@@ -113,10 +116,16 @@ public class Roles {
 		this.authorities = authorities;
 	}
 
+	/**
+	 * @return
+	 */
 	public Long getId() {
 		return id;
 	}
-
+	
+	/**
+	 * @param id
+	 */
 	public void setId(Long id) {
 		this.id = id;
 	}

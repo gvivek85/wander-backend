@@ -28,6 +28,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+/**
+ * Service Class for invoking Covid API's and
+ * fetch the data 
+ * @author Vivek Gupta
+ */
 @Service
 public class InvokeExternalServiceImpl implements InvokeExternalService {
 
@@ -41,27 +46,34 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 
 	@Value("${fetch.country.specific.data}")
 	private String countrySpecificUrl;
-	
+
 	@Value("${fetch.country.summary.url}")
 	private String summaryUrl;
-	
+
 	@Value("${fetch.num.of.days}")
 	private int noOfDays;
 
+	/**
+	 * Method to fetch the Top Countries Data
+	 */
 	@Override
 	public List<DataRowVO> getTopCountriesData() {
 		Object obj = null;
 		String jsonStr = null;
-		try {
+		try { 
 			jsonStr = restTemplate.getForObject(countryDataUrl, String.class);
 			return convertToJsonString(jsonStr);
 		} catch (RestClientException ex) {
 			logger.error("Error while fetching data for top 10 countries " + ex.getMessage());
 		}
-
 		return null;
 	}
 
+	/**
+	 * Method to iterate the JSON String and return the list of DataRowVO Obj's
+	 * @param str
+	 * @return
+	 */
 	private List<DataRowVO> convertToJsonString(String str) {
 		DataRowVO dataVo = null;
 		List<DataRowVO> list = new ArrayList<DataRowVO>();
@@ -73,23 +85,24 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 				dataVo = mapper.readValue(array.getJSONObject(i).toString(), DataRowVO.class);
 				list.add(dataVo);
 			}
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (JsonProcessingException ex) {
+			logger.error("Error while converting JSON String to Object of DataRowVO " + ex.getMessage());
 		} 
 		return list;
 	}
 
+	/**
+	 * Method to fetch the Country Specific Data
+	 */
 	@Override
 	public List<CountryDataVO> getCountrySpecificData(String country) {
 		Object obj = null;
 		String jsonStr = null;
 		CountryDataVO cData = null;
 		List<CountryDataVO> cDataList = new ArrayList<CountryDataVO>();
-		
+
 		try {
 			jsonStr =  restTemplate.getForObject(countrySpecificUrl+country, String.class);
-
 			ObjectMapper map = new ObjectMapper();
 			JSONArray array = new JSONArray(jsonStr);
 			for(int i = 0 ; i < array.length() ; i++){
@@ -99,7 +112,6 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 			Collections.sort(cDataList, Collections.reverseOrder((c1,c2)-> {
 				return c1.getDate().compareTo(c2.getDate());
 			}));
-			//return cDataList;
 			return countryData(cDataList);
 		} catch (JsonProcessingException | JSONException | RestClientException ex) {
 			logger.error("Error while fetching data for top 10 countries " + ex.getMessage());
@@ -107,11 +119,16 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		return null;
 	}
 
+	/**
+	 * Method to iterate the Countries data and fetch the last 7 data 
+	 * @param cDataList
+	 * @return
+	 */
 	private List<CountryDataVO> countryData(List<CountryDataVO> cDataList){
 		List<CountryDataVO> confirmedList = new ArrayList<CountryDataVO>();
 		CountryDataVO data1 = null;
 		if(cDataList != null && !cDataList.isEmpty()) {
-			for(int i=0;i<7;i++) {
+			for(int i=0;i<noOfDays;i++) {
 				data1 = new CountryDataVO();
 				data1.setCountry(cDataList.get(i).getCountry());
 				data1.setDate(cDataList.get(i).getDate());
@@ -125,15 +142,18 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		});
 		return confirmedList;
 	}
-	
+
+	/**
+	 * Method to get the Summzarized data for 4 countries and display it on UI
+	 */
 	public List<ConfirmedCasesVO> getSummary() {
 		List<ConfirmedCasesVO> casesList = new ArrayList<ConfirmedCasesVO>();
-		
+
 		List<CountryDataVO> indiaList = getCountrySpecificData("India");
 		List<CountryDataVO> usList = getCountrySpecificData("united-states");
 		List<CountryDataVO> brList = getCountrySpecificData("Brazil");
 		List<CountryDataVO> rusList = getCountrySpecificData("Russia");
-		
+
 		if(indiaList != null && !indiaList.isEmpty()) {
 			casesList.add(filterCountryList("India", indiaList));
 		}
@@ -148,43 +168,53 @@ public class InvokeExternalServiceImpl implements InvokeExternalService {
 		}
 		return casesList;
 	}
-	
+
+	/**
+	 * Filter out the data for the charts based on the Country name
+	 * @param countryName
+	 * @param countryList
+	 * @return
+	 */
 	private ConfirmedCasesVO filterCountryList(String countryName, List<CountryDataVO> countryList) {
 		ConfirmedCasesVO obj = new ConfirmedCasesVO();
 		List<Long> confirmedCasesList = new ArrayList<Long>();
 		obj.setName(countryName);
-		//obj.setData(countryList);
 		countryList.forEach(item->{
-			//confirmedCasesList.add(item.)
 			confirmedCasesList.add(item.getConfirmed());
 		});
 		obj.setData(confirmedCasesList);
 		return obj;
 	}
-	
+
+	/**
+	 * Method to fetch the Global data Total no of Cases, Deaths and Confimed Cases 
+	 */
 	public GlobalDataVO getGlobalData() {
 		String jsonStr = null;
 		try {
 			jsonStr = restTemplate.getForObject(countryDataUrl, String.class);
 			return fetchGlobalData(jsonStr);
-			//return convertToJsonUsingGson(jsonStr);
 		} catch (RestClientException ex) {
 			logger.error("Error while fetching data for top 10 countries " + ex.getMessage());
 		}
 
 		return null;
 	}
-	
+
+	/**
+	 * Method to iterate the Global data and convert from JSON String to GlobalDataVO object
+	 * @param str
+	 * @return
+	 */
 	private GlobalDataVO fetchGlobalData(String str) {
 		GlobalDataVO gData = null;
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			JSONObject json = new JSONObject(str);
 			gData = mapper.readValue(json.get("Global").toString(), GlobalDataVO.class);
-			
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+		} catch (JsonProcessingException ex) {
+			logger.error("Error while parsing JSON of Global DataObject  " + ex.getMessage());
 		} 
 		return gData;
 	}

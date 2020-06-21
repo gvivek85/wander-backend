@@ -29,89 +29,85 @@ import com.dev.invoke.external.InvokeExternalService;
 import com.dev.security.config.CurrentUser;
 import com.dev.service.DashboardService;
 
+/**
+ * Dashboard Controller, containing API's for all the Dashboard Graphs.
+ * @author Vivek Gupta
+ */
 @RestController
 @RequestMapping("/dashboard")
-@CrossOrigin
 public class DashboardController {
-	
+
 	private Logger logger = LoggerFactory.getLogger(DashboardController.class);
 
 	@Autowired
 	private InvokeExternalService invokeExternalService;
-	
+
 	@Autowired
 	private DashboardService dashboardService;
-	
+
+	/**
+	 * Method fetches the Top 4 Countries Data for Covid-19
+	 * @param userPrincipal
+	 * @return
+	 */
 	@GetMapping("/getTopCountriesData")
 	public List getTopCountries(@CurrentUser UserPrincipal userPrincipal){
-		ApiResponse apiResponse = null;
 		Map<String,Object> finalMap=null;
-		
 		List<DataRowVO> list = invokeExternalService.getTopCountriesData();
-		
+
 		if(list != null) {
-			finalMap = new HashMap<String, Object>();
-			finalMap.put("COUNTRY_DATA", list);
-			apiResponse = new ApiResponse(true, 1000L, "Data fetched Successfully", finalMap );
+			return list;
 		} else {
-			apiResponse = new ApiResponse(true, 1000L, "Data fetched Successfully", finalMap);
+			logger.error("There is no Covid data for the countries");
 		}
-		return list;
+		return null;
 	}
-	
+
+	/**
+	 * This method fetches the Country Specific Data
+	 * @param userPrincipal
+	 * @param country
+	 * @return
+	 */
 	@GetMapping("/getCountrySpecificData/{country}")
 	public List<CountryDataVO> getCountrySpecificData(@CurrentUser UserPrincipal userPrincipal,
 			@PathVariable String country){
-		ApiResponse apiResponse = null;
-		Map<String,Object> finalMap=null;
-		
 		List<CountryDataVO> list = invokeExternalService.getCountrySpecificData(country);
-		
 		if(list != null) {
-			finalMap = new HashMap<String, Object>();
-			finalMap.put("COUNTRY_DATA", list);
-			apiResponse = new ApiResponse(true, 1000L, "Data fetched Successfully", finalMap );
+			return list;
 		} else {
-			apiResponse = new ApiResponse(true, 1000L, "Data fetched Successfully", finalMap);
+			logger.error("There is no Covid data for country " + country);
 		}
-	
-		return list;
+		return null;
 	}
-	
+
 	@GetMapping("/getSummary")
 	public List<ConfirmedCasesVO> getSummary(@CurrentUser UserPrincipal userPrincipal){
-		ApiResponse apiResponse = null;
-		Map<String,Object> finalMap=null;
-		
 		List<ConfirmedCasesVO> list = invokeExternalService.getSummary();
-		
 		if(list == null || list.isEmpty()) {
 			logger.error("No Data found for Country Summary");
 			return null;
 		}
 		return list;
 	}
-	
+
 	@GetMapping("/getGlobalData")
 	public GlobalDataVO getGlobalData() {
 		return invokeExternalService.getGlobalData();
 	}
-	
+
 	@GetMapping("/getCountryDeaths")
 	public CountryDeathsVO getCountryDeaths(@CurrentUser UserPrincipal userPrincipal){
-		ApiResponse apiResponse = null;
-		Map<String,Object> finalMap=null;
-		
+
 		List<DataRowVO> list = invokeExternalService.getTopCountriesData();
-		
+
 		if(list != null && !list.isEmpty()) {
-			
 			return dashboardService.filterList(list);
 		} else {
-			apiResponse = new ApiResponse(true, 1000L, "Data fetched Successfully", finalMap);
+			logger.error("No Data found for Country Deaths");
 		}
 		return null;
 	}
-	
-	
+
+
 }

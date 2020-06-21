@@ -8,6 +8,10 @@ import java.lang.annotation.Target;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+/**
+ * Current User interface to get the logged in user details
+ * @author Vivek Gupta
+ */
 @Target({ElementType.PARAMETER, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

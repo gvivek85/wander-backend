@@ -13,6 +13,11 @@ import com.dev.repository.UserRepository;
 import com.dev.service.UserService;
 import com.dev.config.model.UserPrincipal;
 
+/**
+ * Customer User Detail Service class implementing the UserDetailsService
+ * interface using which we can load the User on Authentication 
+ * @author Vivek Gupta
+ */
 @Service
 public class CustomerUserDetailsService implements UserDetailsService {
 	
@@ -25,11 +30,14 @@ public class CustomerUserDetailsService implements UserDetailsService {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * Method that locates the user based on the username and then
+	 * return the UserDetails.
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
     	UserPrincipal userPrincipal = userService.loadUserRolesAuthorities(user);
-        //return UserPrincipal.create(user);
     	return userPrincipal;
 	}
 }

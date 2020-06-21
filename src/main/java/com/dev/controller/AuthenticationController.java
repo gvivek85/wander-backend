@@ -27,15 +27,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.config.response.ApiResponse;
 import com.dev.config.response.JwtAuthResponse;
 import com.dev.config.service.CustomerUserDetailsService;
+import com.dev.constants.AppConstants;
 import com.dev.entity.User;
 import com.dev.security.config.JwtTokenProvider;
 import com.dev.service.DashboardService;
 import com.dev.service.UserService;
 import com.dev.value.object.LoginVO;
 
+/**
+ * Authentication Class that will be called for Login and user registration
+ * @author Vivek Gupta
+ */
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin
 public class AuthenticationController {
 	
 	private Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
@@ -55,6 +59,13 @@ public class AuthenticationController {
 	@Autowired
 	private UserService userService;
 
+	/**
+	 * Method that is used to Authenticate the User 
+	 * @param loginRequest
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginVO loginRequest,HttpServletRequest request) throws Exception {
 		ApiResponse apiResponse = null;
@@ -62,7 +73,7 @@ public class AuthenticationController {
 		try {
 			if(!(userService.findByUsername(loginRequest.getUsername())!=null)) {
 				logger.error("User Doesn't exist in the System ");
-				apiResponse = new ApiResponse(false, 1004L,"User Doesn't exist in the System.", null);   
+				apiResponse = new ApiResponse(false, AppConstants.RESP_ERROR,"User Doesn't exist in the System.", null);   
 				return ResponseEntity.ok((apiResponse));
 			}
 			 authentication =  
@@ -72,24 +83,28 @@ public class AuthenticationController {
 			
 		} catch (DisabledException ex) {
 			logger.error("User is Disabled " + ex.getMessage());
-			apiResponse = new ApiResponse(false, 1004L,"User id disabled.", null);   
+			apiResponse = new ApiResponse(false, AppConstants.RESP_ERROR,"User id disabled.", null);   
 			return ResponseEntity.ok((apiResponse));
 		} catch (BadCredentialsException ex) {
-			apiResponse = new ApiResponse(false, 1004L,"Invalid User credentials.",null);   
+			apiResponse = new ApiResponse(false, AppConstants.RESP_ERROR,"Invalid User credentials.",null);   
 			logger.error("Invalid User credentials " + ex.getMessage());
 			return ResponseEntity.ok((apiResponse));
 		} catch (Exception ex) {
-			apiResponse = new ApiResponse(false, 1004L,"Invalid User credentials .",null);   
+			apiResponse = new ApiResponse(false, AppConstants.RESP_ERROR,"Invalid User credentials .",null);   
 			logger.error("Invalid User credentials " + ex.getMessage());
 			return ResponseEntity.ok((apiResponse));
 		}
-		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		UserDetails userDetails = customerDetailsService.loadUserByUsername(loginRequest.getUsername());
 		String token = jwtTokenProvider.generateToken(userDetails);
 		return ResponseEntity.ok(new JwtAuthResponse(token));
 	}
 	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
 	@PostMapping("/registerUser")
 	public ResponseEntity<?> registerUser(@RequestBody @Valid User user ) {
 		Boolean isSuccess = true;
@@ -97,7 +112,7 @@ public class AuthenticationController {
 		String emailId = user.getEmail();
 		if(null != emailId && !emailId.isEmpty()) {
 			if(dashboardService.checkUserByEmail(emailId)) {
-				return ResponseEntity.ok(new ApiResponse(false, 1004L, "User with emailId : " + emailId +" already exists.", null));
+				return ResponseEntity.ok(new ApiResponse(false, AppConstants.RESP_ERROR, "User with emailId : " + emailId +" already exists.", null));
 			}
 		}
 		try {
@@ -105,7 +120,7 @@ public class AuthenticationController {
 		} catch (SystemException ex) {
 			logger.error("Error while saving user information " + ex.getMessage());
 		}
-		return ResponseEntity.ok(new ApiResponse(isSuccess, 1000L, returnMessage, null));
+		return ResponseEntity.ok(new ApiResponse(isSuccess, AppConstants.RESP_SUCCESS, returnMessage, null));
 	}
 
 }

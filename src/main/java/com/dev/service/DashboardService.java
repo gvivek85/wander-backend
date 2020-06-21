@@ -8,6 +8,11 @@ import com.dev.chart.vo.CountryDeathsVO;
 import com.dev.chart.vo.DataRowVO;
 import com.dev.entity.User;
 
+/**
+ * Dashboard Service Interface
+ * @author Vivek Gupta
+ *
+ */
 public interface DashboardService {
 
 	public Boolean saveUser(User user) throws SystemException;

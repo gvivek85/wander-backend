@@ -22,6 +22,10 @@ import com.dev.config.service.CustomerUserDetailsService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
+/**
+ * JWT Request Filter class  
+ * @author Vivek Gupta
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
@@ -38,7 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		String requestTokenHeader = request.getHeader("Authorization");
-
+		
 		String userName = null;
 		String jwtToken = null;
 
@@ -58,8 +62,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		if (StringUtils.hasText(jwtToken) ) {
 			UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 			if( jwtTokenProvider.validateToken(jwtToken, userDetails)) {
-				// if token is valid configure Spring Security to manually set
-				// authentication
 
 				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());

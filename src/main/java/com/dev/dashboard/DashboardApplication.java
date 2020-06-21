@@ -14,6 +14,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dev.service.DashboardService;
 
+/**
+ * DashBoard Application Class
+ * @author Vivek Gupta
+ *
+ */
 @SpringBootApplication
 @EntityScan(basePackages = {"com.dev.entity"})
 @ComponentScan(basePackages = {"com.dev.config.model","com.dev.config.response","com.dev.config.service",

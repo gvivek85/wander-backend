@@ -2,13 +2,26 @@ package com.dev.config.response;
 
 import java.util.Map;
 
+/**
+ * APiResponse Class that contains the details of the response.
+ * @author Vivek Gupta
+ */
 public class ApiResponse {
+
 	private Boolean success;
 	
 	private Long responseCode;
+	
 	private String responseMsg;
+	
 	private Map<String,Object> finalMap;
 	
+	/**
+	 * @param success
+	 * @param responseCode
+	 * @param responseMsg
+	 * @param finalMap
+	 */
 	public ApiResponse(boolean success, Long responseCode, String responseMsg, Map<String, Object> finalMap) {
 		this.success = success;
 		this.responseCode = responseCode;
@@ -16,14 +29,24 @@ public class ApiResponse {
 		this.finalMap = finalMap;
 	}
 
+	/**
+	 * 
+	 */
 	public ApiResponse() {
 		
 	}
 
+	
+	/**
+	 * @return the success
+	 */
 	public Boolean getSuccess() {
 		return success;
 	}
 
+	/**
+	 * @param success the success to set
+	 */
 	public void setSuccess(Boolean success) {
 		this.success = success;
 	}

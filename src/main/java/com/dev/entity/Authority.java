@@ -3,6 +3,10 @@ import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 
+/**
+ * Authority Entity class used to hold the Authorities for User
+ * @author Vivek Gupta
+ */
 @Entity
 @Table(name = "Authority")
 public class Authority {
@@ -24,20 +28,33 @@ public class Authority {
     public Authority() {
 
     }
-    
+    /**
+     * 
+     * @param id
+     * @param authotiryName
+     */
     public Authority(Long id,String authotiryName) {
     	id = id;
     	this.name = authotiryName;
     }
 
+    /**
+     * @param name
+     */
     public Authority(String name) {
         this.name = name;
     }
-
+    
+    /**
+     * @return
+     */
     public String getName() {
         return name;
     }
-
+    
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
